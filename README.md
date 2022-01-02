@@ -5,3 +5,8 @@ pytorch implementation of LeNet CNN architecture <a href=http://vision.stanford.
 ## VGG-net
 pytorch implementation of VGG architecture <a href=https://arxiv.org/abs/1409.1556 >paper</a>
 <img src="img/vgg.png" alt="VGG architecture">
+
+## GoogleNet
+pytorch implementation of GoogleNet architecture <a href=https://arxiv.org/abs/1409.4842 >paper</a>
+<img src="img/inception_block.png" alt="inception block">
+<img src="img/architecture_dimensions.png" alt="GoogleNet architecture">
