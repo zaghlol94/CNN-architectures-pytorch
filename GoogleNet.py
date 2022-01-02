@@ -34,9 +34,31 @@ class Inception_block(nn.Module):
         return torch.cat([self.branch1(x), self.branch2(x), self.branch3(x), self.branch4(x)], 1)
 
 
+class InceptionAux(nn.Module):
+    def __init__(self, in_channels, num_classes):
+        super(InceptionAux, self).__init__()
+        self.relu = nn.ReLU()
+        self.dropout = nn.Dropout(p=0.7)
+        self.pool = nn.AvgPool2d(kernel_size=5, stride=3)
+        self.conv = conv_block(in_channels, 128, kernel_size=1)
+        self.fc1 = nn.Linear(2048, 1024)
+        self.fc2 = nn.Linear(1024, num_classes)
+
+    def forward(self, x):
+        x = self.pool(x)
+        x = self.conv(x)
+        x = x.reshape(x.shape[0], -1)
+        x = self.relu(self.fc1(x))
+        x = self.dropout(x)
+        x = self.fc2(x)
+
+        return x
+
+
 class GoogleNet(nn.Module):
-    def __init__(self, in_channels=3, num_classes=1000):
+    def __init__(self, in_channels=3, aux_logits=True, num_classes=1000):
         super(GoogleNet, self).__init__()
+        self.aux_logits = aux_logits
         self.conv1 = conv_block(in_channels=in_channels, out_channels=64, kernel_size=(7, 7), stride=(2, 2),
                                 padding=(3, 3))
         self.maxpool1 = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
@@ -61,6 +83,12 @@ class GoogleNet(nn.Module):
         self.dropout = nn.Dropout(p=0.4)
         self.fc1 = nn.Linear(1024, num_classes)
 
+        if self.aux_logits:
+            self.aux1 = InceptionAux(512, num_classes)
+            self.aux2 = InceptionAux(528, num_classes)
+        else:
+            self.aux1 = self.aux2 = None
+
     def forward(self, x):
         x = self.conv1(x)
         x = self.maxpool1(x)
@@ -72,9 +100,17 @@ class GoogleNet(nn.Module):
         x = self.maxpool3(x)
 
         x = self.inception4a(x)
+        # Auxiliary Softmax classifier 1
+        if self.aux_logits and self.training:
+            aux1 = self.aux1(x)
+
         x = self.inception4b(x)
         x = self.inception4c(x)
         x = self.inception4d(x)
+        # Auxiliary Softmax classifier 2
+        if self.aux_logits and self.training:
+            aux2 = self.aux2(x)
+
         x = self.inception4e(x)
         x = self.maxpoool4(x)
 
@@ -85,9 +121,12 @@ class GoogleNet(nn.Module):
         x = x.reshape(x.shape[0], -1)
         x = self.dropout(x)
         x = self.fc1(x)
-        return x
+        if self.aux_logits and self.training:
+            return aux1, aux2, x
+        else:
+            return x
 
 
-data = torch.rand(3,3,224,224)
+data = torch.rand(3, 3, 224, 224)
 model = GoogleNet()
-print(model(data).shape)
+print(model(data)[2].shape)
