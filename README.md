@@ -14,3 +14,7 @@ pytorch implementation of GoogleNet architecture <a href=https://arxiv.org/abs/1
 ## ResNet
 pytorch implementation of ResNet architecture <a href = https://arxiv.org/abs/1512.03385>paper</a>
 <img src="img/resnet.png" alt="resnet">
+
+## EfficientNet
+pytorch implementation of EfficientNet architecture <a href = https://arxiv.org/abs/1905.11946>paper</a>
+<img src="img/EfficientNet.png" alt="EfficientNet">
