@@ -1,4 +1,7 @@
 # CNN-architectures-pytorch
+pytorch implementation for the most used CNN architecture: <a href=https://github.com/zaghlol94/CNN-architectures-pytorch/blob/main/vgg.py>VGG</a> ,<a href=https://github.com/zaghlol94/CNN-architectures-pytorch/blob/main/lenet.py>leNet</a>
+,<a href=https://github.com/zaghlol94/CNN-architectures-pytorch/blob/main/GoogleNet.py>GoogleNet</a>, <a href=https://github.com/zaghlol94/CNN-architectures-pytorch/blob/main/resnet.py>ResNet</a> and 
+<a href=https://github.com/zaghlol94/CNN-architectures-pytorch/blob/main/efficientnet.py>EfficientNet</a>
 ## LeNet
 pytorch implementation of LeNet CNN architecture <a href=http://vision.stanford.edu/cs598_spring07/papers/Lecun98.pdf>paper</a>
  <img src="img/LeNet_Original_Image_48T74Lc.jpg" alt="LeNet architecture">
